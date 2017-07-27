@@ -102,6 +102,7 @@ class Order
 
   def request_item(order)
     loop do
+      system 'clear'
       display_food_menu
       puts '' # Divider Line
       display_drinks_menu      
@@ -176,9 +177,8 @@ def display_food_menu
     user_index = index + 1
     # Display item with index first, then name and price
     if menu_item.category == "Food"
-      puts "#{user_index}.) #{menu_item.name}"
+      puts "#{user_index}.) #{menu_item.name} ($#{menu_item.price})"
       puts "#{menu_item.description}"
-      puts "($#{menu_item.price})"
       puts '' # Divider Line
     end
   end
@@ -263,12 +263,12 @@ def main_menu
 end
 
 MENU_ITEMS = [
-  MenuItem.new('Steak', 'Food', 'This boneless steak is rich, tender, juicy and full-flavored', 20),
-  MenuItem.new('Parma', 'Food', 'A delicious chicken Parma', 15),
-  MenuItem.new('Eggplant Casserole', 'Food', 'A healthy Turkish Eggplant Casserole Recipe with Tomatoes', 15),
-  MenuItem.new('Chips', 'Food', 'Delicious string fries cooked in batter for a nice and crispy crunch', 7),
-  MenuItem.new('Beer', 'Drink', 'A nice stout beer from Germany', 7),
-  MenuItem.new('Soft drink', 'Drink', 'A drink that is nice and soft', 3.50),
+  MenuItem.new('Steak', 'Food', 'This boneless steak is rich, tender, juicy and full-flavored.', 20),
+  MenuItem.new('Parma', 'Food', 'A delicious chicken Parma.', 15),
+  MenuItem.new('Eggplant Casserole', 'Food', 'A healthy Turkish Eggplant Casserole Recipe with Tomatoes.', 15),
+  MenuItem.new('Chips', 'Food', 'Delicious string fries cooked in batter for a nice and crispy crunch.', 7),
+  MenuItem.new('Beer', 'Drink', 'A nice stout beer from Germany.', 7),
+  MenuItem.new('Soft drink', 'Drink', 'A drink that is nice and soft.', 3.50),
   MenuItem.new('Martini', 'Drink', 'The martini is a cocktail made with gin and vermouth, and garnished with an olive or a lemon twist.', 5.50),
   MenuItem.new('Sour', 'Drink', 'A sour is a traditional family of mixed drinks.', 8),
   MenuItem.new('Margarita', 'Drink', 'A margarita is a cocktail consisting of tequila, triple sec, and lime or lemon juice, often served with salt or sugar on the rim of the glass.', 9.50),
