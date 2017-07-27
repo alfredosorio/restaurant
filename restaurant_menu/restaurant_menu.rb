@@ -98,7 +98,7 @@ def order_items(order)
     # user_options = gets.chomp
     # order << user_options
     
-    Which course?
+    # Which course?
     puts "Would you like the #{menu_item.name} for your [e]ntree, [m]ain or [d]essert?"
       loop do
       course_choice = gets.chomp.downcase
