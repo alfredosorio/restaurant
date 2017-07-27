@@ -27,18 +27,77 @@ class Order
     @items.each do |item|
       total += item.price
     end
-    "$#{total}"
+    "$#{total.round(2)}"
+  end
+
+  def surcharge_total
+    total = 0
+    @items.each do |item|
+      total += item.price
+    end
+
+    calculated_surcharge = total * (1.5 / 100)
+    surcharge_total = (total + calculated_surcharge)    
+    "$#{surcharge_total.round(2)}"
   end
 
   def bill
-    table = Terminal::Table.new headings: ['Name', 'Course', 'Options', 'Price'] do |t|
-      @items.each do |item|
-        t << [item.name, item.course.capitalize, item.options.capitalize, "$#{item.price}"]
+    if @items == []
+      system 'clear'
+      puts 'Please order at least one item.'
+      sleep 2
+      main_menu
+    else
+      puts 'Thank you'
+      puts ''
+
+      sleep 2
+      puts 'I hope you enjoyed your meal. Here is your bill:'
+      puts '' # Divider Line
+      table = Terminal::Table.new headings: ['Name', 'Course', 'Options', 'Price'] do |t|
+        @items.each do |item|
+          t << [item.name, item.course.capitalize, item.options.capitalize, "$#{item.price}"]
+          
+        end
+        t.add_separator
+        t << ['TOTAL (Credit cards incur a surcharge of 1.5%)','','', total]
       end
-      t.add_separator
-      t << ['TOTAL','','', total]
+      table
     end
-    table
+  end
+
+  def pay_bill
+    puts '' # Divider Line
+    puts "Please pay #{total} now."
+    puts '' # Divider Line
+    puts '1. Cash'
+    puts '2. Credit Card'
+    puts '' # Divider Line
+    print 'How would you like to pay? '
+    choice = gets.chomp
+    case choice
+    when '1'
+      puts "Sure, that will be #{total}"
+      sleep 3
+      puts '' # Divider Line
+      puts 'Payment received. Thank you for visiting, and see you next time.'
+      puts '' # Divider Line
+      exit
+    when '2'
+      puts 'Please note that credit cards incur a surcharge of 1.5%'
+      puts "So your total was #{total} and is now #{surcharge_total}"
+      sleep 2
+      puts '' # Divider Line
+      puts "Charging #{surcharge_total} from your account..."
+      sleep 3
+      puts 'Payment received. Thank you for visiting, and see you next time.'
+      puts '' # Divider Line
+      exit
+    else
+      puts 'You entered an invalid entry. Please try again'
+      sleep 2
+      puts '' # Divider Line
+    end
   end
 
   def request_item(order)
@@ -73,7 +132,7 @@ class Order
 
       # Request course
       print "Would you like the #{menu_item.name} for your [e]ntree, [m]ain or [d]essert? "
-      loop do # Refactor and make shorter
+      loop do
         choice = gets.chomp.downcase
         case choice
         when 'e'
@@ -105,7 +164,7 @@ class Order
       sleep 2
       system 'clear'
     end
-  end  
+  end
 end
 
 def display_food_menu
@@ -141,18 +200,24 @@ def display_drinks_menu
   end
 end
 
-def test(order)
-  puts order.inspect
-  gets
-end
-
 def ask_for_bill(order)
-  puts 'Thank you'
-  puts ''
-
-  sleep 2
-  puts 'I hope you enjoyed your meal. Here is your bill:'
   puts order.bill
+  
+  loop do
+    puts '' # Divider Line
+    print 'Would you like to pay now? [y/n] '
+    choice = gets.chomp.downcase
+    case choice
+    when 'y'
+      order.pay_bill
+    when 'n'
+      return
+    else 
+    puts 'You entered an invalid entry. Please try again'
+    sleep 2
+    puts '' # Divider Line
+    end
+  end
 end
 
 def main_menu
@@ -188,8 +253,6 @@ def main_menu
       system 'clear'
       ask_for_bill(order)
       puts '' # Divider Line
-      puts 'Press any key...'
-      gets
     when 't'
       test(order)
     else 
